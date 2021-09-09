@@ -1,5 +1,5 @@
 #include <iostream>
-#include <map>
+#include <set>
 #include <vector>
 
 using namespace std;
@@ -12,16 +12,16 @@ int main() {
     int N, M;
     int cnt = 0;
     string str;
-    map<string, int> m;
+    set<string> s;
     cin >> N >> M;
 
     while (N--) {
         cin >> str;
-        m[str]++;
+        s.insert(str);
     }
     while (M--) {
         cin >> str;
-        if (m.count(str)) cnt++; //주어진 key의 요소 개수를 반환 (0또는 1)
+        if (s.count(str)) cnt++; //주어진 key의 요소 개수를 반환 (0또는 1)
     }
 
     cout << cnt << "\n";
