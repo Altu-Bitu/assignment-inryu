@@ -1,38 +1,29 @@
 #include <iostream>
-#include <vector>
 #include <map>
-#include <algorithm>
 
-
-//시간초과
 using namespace std;
-
-int N, K, val;
-vector<int> A;
-int res;
-int cnt;
-
-void dfs(int start, int end, int sum) {
-
-    if (sum == K) {
-        res++;
-        // return하지 않고 더 해봐도 된다.
-    }
-    if (end == N - 1) {
-        return;
-    }
-    dfs(start, end + 1, sum + A[end + 1]);
-}
+int p_sum[200001]; //prefix sum 누적합.
 
 int main() {
-    cin >> N >> K;
-    for (int i = 0; i < N; i++) {
-        cin >> val;
-        A.push_back(val);
-    }
+    int N, K, val;
+    long long res = 0; // 200000*200001/2 개 까지 가능하므로 long long!
+    map<int, int> m; //<누적합, 누적합 개수>
 
-    for (int i = 0; i < N - 1; i++) {
-        dfs(i, i, A[i]); //시작인덱스 , 끝인덱스, 합
+    cin >> N >> K;
+
+    //부분합 공식 p_sum[i]-p_sum[j]=K 에서 (j<=i) j는 0이 될 수 있음.
+    m[0]++; //인덱스 0까지 누적합은 0이므로
+
+    //인덱스 1부터 i까지의 누적합.
+    for (int i = 1; i <= N; i++) {
+        cin >> val;
+        p_sum[i] = p_sum[i - 1] + val;
+
+        // * 부분합 공식
+        // p_sum[i]-K=p_sum[j]
+        // 이 되는 p_sum[j]값이 이전에 존재했다면. map에 값이 들어있을 것.
+        res += m[p_sum[i] - K];
+        m[p_sum[i]]++; //현재까지 부분합 추가해주기.
     }
 
     cout << res << "\n";
