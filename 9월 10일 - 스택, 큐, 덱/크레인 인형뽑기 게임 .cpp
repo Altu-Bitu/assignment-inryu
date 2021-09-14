@@ -7,34 +7,40 @@ using namespace std;
 int solution(vector<vector<int>> board, vector<int> moves) {
     int answer = 0;
     stack<int> bucket;
+    stack<int> map[board.size()];
 
-    for (auto move: moves) {
-        int col = move - 1; //0행부터 시작하므로
-        int row = 0; //가장 윗줄부터 확인
-        while (row < board.size()) {
-            // 빈 칸이라면
-            if (!board[row][col]) {
-                row++; //다음 줄
-                continue;
-            }
-            // 빈 칸이 아니라면
-            int doll_num = board[row][col];
-            board[row][col] = 0; //뽑아서 0으로
-
-            if (bucket.empty()) {  //1. 스택이 비어있음
-                bucket.push(doll_num); //바로 삽입.
-                break;
-            }
-
-            if (bucket.top() == doll_num) {  //2. 같은 모양 2개가 연속해서 들어있음
-                bucket.pop();
-                answer += 2;
-            } else bucket.push(doll_num); //3. 같은 모양이 아님
-            break;
+    //각 열마다 stack 전처리
+    for (int j = 0; j < board.size(); j++) { //열
+        for (int i = board.size() - 1; i >= 0; i--) {//행 : 맽 밑부터
+            if (board[i][j]) map[j].push(board[i][j]);
+            else break; //0이 나오면 바로 break;
         }
     }
-    return answer;
 
+    for (auto move: moves) {
+        int col = move - 1; //0열부터 시작하므로
+
+        //해당 열의 스택 확인
+        if (!map[col].empty()) {
+            int doll_num = map[col].top(); //가장 위에 있는 인형
+            map[col].pop(); //뽑기
+
+            if (bucket.empty()) { //버킷이 비어있으면 바로 push
+                bucket.push(doll_num);
+                continue;
+            }
+
+            //버킷이 비어있지 않을 때 버킷의 top과 현재 뽑은 인형 비교
+            if (bucket.top() == doll_num) {
+                bucket.pop();
+                answer += 2;
+            } else {
+                bucket.push(doll_num);
+            }
+        }
+
+    }
+    return answer;
 }
 
 int main() {

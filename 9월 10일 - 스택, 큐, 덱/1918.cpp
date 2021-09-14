@@ -20,7 +20,7 @@ int main() {
 
     for (auto i:str) {
         //피연산자는 바로 출력
-        if (i >= 'A' && i <= 'Z') {
+        if (isupper(i)) {
             cout << i;
             continue;
         }
