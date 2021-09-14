@@ -1,57 +1,66 @@
-#include <vector>
 #include <string>
 #include <iostream>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
 int main() {
     int T, n;
     string p, arr;
-
     cin >> T;
     while (T--) {
-
-        vector<int> num_arr;
+        deque<int> dq;
         cin >> p >> n >> arr;
+        bool err = false;
+        bool is_reversed = false; //실제로 뒤집지 않고, 변수를 통해 맨 앞문자를 지울 건지 맨 뒷문자를 지울 건지 결정
+        string str;
 
-        string str = "";
+        //[, ,] 형태에서 숫자 추출하여 덱에 push
         for (auto i:arr) {
-            if (i == '[') continue;
-            if (i == ',' && str.size() > 0) {
-                num_arr.push_back(stoi(str));
+            if (i >= '0' && i <= '9') {
+                str += i;
+                continue;
+            }
+            if ((i == ']' || i == ',') && !str.empty()) {
+                dq.push_back(stoi(str));
                 str = "";
-            } else if (i == ']' && str.size() > 0) num_arr.push_back(stoi(str));
-            else str += i;
-        }
-
-        cout << "\n==num arr==\n";
-        for (auto i:num_arr) cout << i << " ";
-        cout << "\n";
-
-        bool flag = 0;
-        for (auto function:p) {
-            if (function == 'R' && num_arr.size() > 0) {
-                reverse(num_arr.begin(), num_arr.end());
-            } else if (function == 'D') {
-                if (num_arr.size() == 0) {
-                    cout << "error\n";
-                    flag = 1;
-                    break;
-                }
-                num_arr.erase(num_arr.begin());
             }
         }
 
-        if (flag) continue;
-        cout << "[";
-        for (int i = 0; i < num_arr.size() - 1; i++) {
-            cout << num_arr[i] << ",";
+        for (auto function:p) {
+            if (function == 'R') { //뒤집기
+                is_reversed = !is_reversed;
+            } else { //버리기
+                if (dq.empty()) {
+                    cout << "error\n";
+                    err = true;
+                    break;
+                }
+                if (!is_reversed) { //뒤집히지 않았다면 맨 앞문자 삭제
+                    dq.pop_front();
+                } else {
+                    dq.pop_back(); //뒤집혔다고 가정하고 맨 뒷문자 삭제
+                }
+            }
         }
-        cout << num_arr[num_arr.size() - 1] << "]\n";
+
+        if (err) continue;
+
+        cout << "[";
+        while (!dq.empty()) {
+            if (is_reversed) {
+                cout << dq.back();
+                dq.pop_back();
+            } else {
+                cout << dq.front();
+                dq.pop_front();
+            }
+            if (!dq.empty()) cout << ",";
+
+        }
+        cout << "]\n";
     }
-
     return 0;
-
 }
 
