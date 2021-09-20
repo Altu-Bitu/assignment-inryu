@@ -12,28 +12,30 @@ int main() {
 
     int M, input;
     string cmd;
-    set<int> s;
+    vector<bool> visited(21);
     cin >> M;
 
     while (M--) {
         cin >> cmd;
         if (cmd == "all") {
-            for (int i = 1; i <= 20; i++) s.insert(i);
+            for (int i = 1; i <= 20; i++)
+                if (!visited[i]) visited[i] = 1;
         } else if (cmd == "empty") {
-            s.clear();
+            for (int i = 1; i <= 20; i++)
+                if (visited[i]) visited[i] = 0;
         } else if (cmd == "add") {
             cin >> input;
-            s.insert(input);
+            if (!visited[input]) visited[input] = 1;
         } else if (cmd == "remove") {
             cin >> input;
-            if (s.count(input)) s.erase(input);
+            if (visited[input]) visited[input] = 0;
         } else if (cmd == "check") {
             cin >> input;
-            cout << s.count(input) << "\n";
+            cout << visited[input] << "\n";
         } else if (cmd == "toggle") {
             cin >> input;
-            if (s.count(input)) s.erase(input); //존재하면
-            else s.insert(input);
+            if (visited[input]) visited[input] = 0; //존재하면 제거
+            else visited[input] = 1; //없으면 추가
         }
     }
 }

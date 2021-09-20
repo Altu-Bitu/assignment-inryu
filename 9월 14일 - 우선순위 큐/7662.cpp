@@ -35,8 +35,6 @@ int main() {
                 }
             }
         }
-
-
         if (m.empty()) {
             cout << "EMPTY\n";
             continue;

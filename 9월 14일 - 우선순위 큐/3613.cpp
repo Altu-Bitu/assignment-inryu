@@ -33,7 +33,7 @@ int isJava(string str) {
     bool java = false;
     bool cpp = false;
 
-    //첫 글자가 대문자거나, 마지막이 '_'로 끝나면
+    //첫 글자가 소문자가 아니거나, 마지막이 '_'로 끝나면
     if (!islower(str[0]) || str[str.size() - 1] == '_') return 3;
 
     for (int i = 1; i < str.size(); i++) {
