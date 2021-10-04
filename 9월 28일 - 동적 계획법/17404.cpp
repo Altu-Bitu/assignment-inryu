@@ -6,14 +6,22 @@
 
 using namespace std;
 const int MAX = 2147000000;
+vector<vector<int>> dp;
+vector<vector<int>> arr;
+
+void paintColor(int house) {
+    dp[house][0] = min(dp[house - 1][1], dp[house - 1][2]) + arr[house][0]; //빨간색-> 이전집이 초, 파
+    dp[house][1] = min(dp[house - 1][0], dp[house - 1][2]) + arr[house][1]; //초록색 -> 이전집이 빨, 파
+    dp[house][2] = min(dp[house - 1][0], dp[house - 1][1]) + arr[house][2]; //파란색 -> 이전집이 빨, 초
+}
 
 int main() {
     int n;
     int ans = MAX;
     cin >> n;
     //🌟 dp[i][j] : i번째 집을 j번째 색깔로 칠할 때 최소비용.
-    vector<vector<int>> dp(n + 1, vector<int>(4, 2147000000));
-    vector<vector<int>> arr(n + 1, vector<int>(4, 0));
+    dp.assign(n + 1, vector<int>(4, MAX));
+    arr.assign(n + 1, vector<int>(4, 0));
 
     for (int i = 1; i <= n; i++) {
         for (int j = 0; j < 3; j++) {
@@ -30,9 +38,7 @@ int main() {
 
         //2번 집부터
         for (int j = 2; j <= n; j++) {
-            dp[j][0] = min(dp[j - 1][1], dp[j - 1][2]) + arr[j][0]; //빨간색-> 이전집이 초, 파
-            dp[j][1] = min(dp[j - 1][0], dp[j - 1][2]) + arr[j][1]; //초록색 -> 이전집이 빨, 파
-            dp[j][2] = min(dp[j - 1][0], dp[j - 1][1]) + arr[j][2]; //파란색 -> 이전집이 빨, 초
+            paintColor(j);
         }
 
         //첫 집을 색깔 i로 고정했을 때, 마지막 집은 i색 빼고

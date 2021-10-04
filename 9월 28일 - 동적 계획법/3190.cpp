@@ -5,8 +5,7 @@
 using namespace std;
 
 int n, k, l;
-vector<vector<int>> board;
-vector<vector<bool>> visited;
+bool board[2][101][101];// 0면: 사과 , 1면 : 뱀
 queue<pair<int, char>> moves;
 queue<pair<int, char>> tail; //꼬리
 
@@ -23,22 +22,22 @@ bool moveSnake(int r, int c, int time) {
     int nr = r + dr[cur_dir];
     int nc = c + dc[cur_dir];
     //벽에 부딪히거나 자기자신 몸과 부딪히면
-    if (nr > n || nc > n || nr < 1 || nc < 1 || visited[nr][nc]) {
+    if (nr > n || nc > n || nr < 1 || nc < 1 || board[1][nr][nc]) {
         return false;
     }
     //이동
     tail.push({nr, nc});
-    visited[nr][nc] = true;
+    board[1][nr][nc] = true; //뱀 머리
     cur_r = nr;
     cur_c = nc;
 
-    if (board[nr][nc] == 1) { //사과가 있다면
-        board[nr][nc] = 0; // 사과를 없애준다.
+    if (board[0][nr][nc] == 1) { //사과가 있다면
+        board[0][nr][nc] = 0; // 사과를 없애준다.
     } else { //없다면
         int tr = tail.front().first;
         int tc = tail.front().second;
         tail.pop();
-        visited[tr][tc] = false; //꼬리가 위치한 칸의 뱀을 비워준다.
+        board[1][tr][tc] = 0; //꼬리가 위치한 칸의 뱀을 비워준다.
         //🌟처음엔 바로 전 칸을 지워서 틀림. // 꼬리 위치를 계속해서 큐에 담아줘야 함.
     }
 
@@ -57,23 +56,20 @@ int main() {
 
     //입력
     cin >> n >> k;
-    board.assign(n + 1, vector<int>(n + 1, 0)); //인덱스 1,1부터 시작 (사과)
-    visited.assign(n + 1, vector<bool>(n + 1, 0)); //인덱스 1,1부터 (뱀)
-    int r, c, time;
+    int r, c, sec;
     char dir;
     for (int i = 0; i < k; i++) {
         cin >> r >> c;
-        board[r][c] = 1; //사과
+        board[0][r][c] = 1; //사과
     }
     cin >> l;
     for (int i = 0; i < l; i++) {
-        cin >> time >> dir;
-        moves.push({time, dir});
-
+        cin >> sec >> dir;
+        moves.push({sec, dir});
     }
 
     int ans = 0;
-    visited[1][1] = 1; //처음 뱀 위치
+    board[1][1][1] = 1; //처음 뱀 위치
     tail.push({1, 1});
     while (true) {
         ans++;

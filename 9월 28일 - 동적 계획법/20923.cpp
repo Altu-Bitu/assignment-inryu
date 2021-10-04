@@ -21,7 +21,7 @@ int main() {
         deck[1].push_front(b);
     }
 
-    int turn = 0; //도도부터
+    bool turn = 0; //도도부터
     while (m--) {
         //내려놓기
         ground[turn].push_front(deck[turn].front());
@@ -36,7 +36,7 @@ int main() {
 
         int winner = check_top();
         if (winner == 2) { //아무도 못가져감
-            turn = abs(turn - 1);
+            turn = !turn;
             continue;
         }
         int loser = abs(winner - 1);
@@ -50,7 +50,7 @@ int main() {
             deck[winner].push_back(ground[winner].back());
             ground[winner].pop_back();
         }
-        turn = abs(turn - 1);
+        turn = !turn;
     }
     if (deck[0].size() > deck[1].size()) {
         cout << "do\n";
