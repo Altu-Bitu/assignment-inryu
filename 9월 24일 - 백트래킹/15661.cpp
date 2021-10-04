@@ -1,87 +1,67 @@
-/*
-class Main {
-    static int[][]
-    map;
-    static int[]
-    person;
-    static int n;
-    static int ans = Integer.MAX_VALUE;
+#include <iostream>
+#include <algorithm>
+#include <vector>
 
-    //시간초과가 나는데..자바라 잘 모르겠다 또 string을 쓰거나 해야 하나?
-public
+using namespace std;
 
-    static int computePower() {
-        int start_power = 0;
-        int link_power = 0;
+vector<vector<int>> map;
+vector<int> team; //1은 스사트, 0은 링크
+int ans = 2147000000;
+int n;
 
-        ArrayList <Integer> start = new ArrayList();
-        ArrayList <Integer> link = new ArrayList();
-
-
-        //1이면 스타트, 0이면 링크
-        for (int i = 1; i <= n; i++) {
-            if (person[i] == 1) start.add(i);
-            else link.add(i);
-        }
-        //스타트
-        for (int i = 0; i < start.size(); i++) {
-            for (int j = i + 1; j < start.size(); j++) {
-                start_power += map[Integer.parseInt(start.get(i).toString())][Integer.parseInt(
-                        start.get(j).toString())];
-                start_power += map[Integer.parseInt(start.get(j).toString())][Integer.parseInt(
-                        start.get(i).toString())];
-            }
-        }
-
-        //링크
-        for (int i = 0; i < link.size(); i++) {
-            for (int j = i + 1; j < link.size(); j++) {
-                link_power += map[Integer.parseInt(link.get(i).toString())][Integer.parseInt(link.get(j).toString())];
-                link_power += map[Integer.parseInt(link.get(j).toString())][Integer.parseInt(link.get(i).toString())];
-            }
-        }
-
-        return Math.abs(start_power - link_power);
+//능력치 차 구하기
+int computeSub() {
+    vector<int> start, link;
+    int start_power = 0, link_power = 0;
+    for (int i = 1; i <= n; i++) {
+        if (team[i]) start.push_back(i); //조합 배열에서 1은 스타트팀
+        else link.push_back(i); //0은 링크팀
     }
 
-    //조합 구현.
-public
-
-    static void selectStart(int start, int level, int target_level) {
-        if (level == target_level) { //target_level 개를 다 골랐을 경우
-            int power_sub = computePower(); //차이 구하기
-            ans = Math.min(ans, power_sub);
-            return;
-        }
-
-        for (int i = start; i <= n; i++) {
-            person[i] = 1; //1로 설정한 것이 스타트팀.
-            selectStart(i + 1, level + 1, target_level);
-            person[i] = 0;
+    //start_power
+    for (int i = 0; i < start.size() - 1; i++) {
+        for (int j = i + 1; j < start.size(); j++) {
+            start_power += map[start[i]][start[j]] + map[start[j]][start[i]];
         }
     }
-
-public
-
-    static void main(String[] args) {
-        Scanner kb = new Scanner(System.in);
-        //입력
-        n = kb.nextInt();
-        map = new int[n + 1][n + 1];
-
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= n; j++) {
-                map[i][j] = kb.nextInt();
-            }
+    //link_power
+    for (int i = 0; i < link.size() - 1; i++) {
+        for (int j = i + 1; j < link.size(); j++) {
+            link_power += map[link[i]][link[j]] + map[link[j]][link[i]];
         }
-        //스타트팀 기준으로, 1명~ n-1명의 조합을 구해야 함!
-        for (int i = 1; i <= n - 1; i++) {
-            person = new int[n + 1];
-            selectStart(1, 0, i); //(start, level, target level) -> 1번 사람부터 시작
-        }
+    }
+    return abs(start_power - link_power);
+}
 
-        System.out.println(ans);
+
+void dfs(int start, int level, int target_level) {
+    if (level == target_level) {
+        ans = min(ans, computeSub());
+        return;
+    }
+
+    for (int i = start; i <= n; i++) {
+        team[i] = 1; //1은 스타트;
+        dfs(i + 1, level + 1, target_level);
+        team[i] = 0;
     }
 }
 
- */
+int main() {
+
+    cin >> n;
+    map.assign(n + 1, vector<int>(n + 1, 0));
+    team.assign(n + 1, 0);
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> map[i][j];
+        }
+    }
+
+    //스타트의 인원을 1~n-1명까지 조합!
+    for (int i = 1; i <= n - 1; i++) {
+        dfs(1, 0, i);
+    }
+
+    cout << ans << "\n";
+}
