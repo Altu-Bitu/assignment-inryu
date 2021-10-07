@@ -14,6 +14,7 @@ int solution(deque<int> cake, int m) {
         int now = cake.front();
         cake.pop_front();
 
+        //🤨수학적인 방법
         if (now == 10) ans++;
         else if (now > 10) {
             ans++;
@@ -30,21 +31,22 @@ int solution(deque<int> cake, int m) {
     return ans;
 }
 
+bool cmp(int &a, int &b) {
+    if (a % 10 == 0 && b % 10 == 0) return a < b; //둘다 10의 배수 -> 오름차순
+    else if (a % 10 == 0) return true; //a만 10의 배수면 true (a가 앞)
+    else if (b % 10 == 0) return false; //b만 10의 배수면 false (b가 앞)
+    return a < b; //둘 다 10의배수가 아님 -> 오름차순
+}
+
 int main() {
     int n, m, val;
     cin >> n >> m;
-    deque<int> cake1; //10의 배수
-    deque<int> cake2; //10의 배수 아닌 것.
+    deque<int> cake; //한 번에..
     for (int i = 0; i < n; i++) {
         cin >> val;
-        if (val % 10 == 0) cake1.push_back(val);
-        else cake2.push_back(val);
+        cake.push_back(val);
     }
-    sort(cake1.begin(), cake1.end()); //10의 배수중에서도 작은거부터 처리해야 남는 거 없이 최대한 많이.
-    sort(cake2.begin(), cake2.end());
-
-    cake1.insert(cake1.end(), cake2.begin(), cake2.end()); //10의 배수 뒤에 10의 배수 아닌 것 붙이기
-
-    cout << solution(cake1, m);
+    sort(cake.begin(), cake.end(), cmp);
+    cout << solution(cake, m);
     return 0;
 }
