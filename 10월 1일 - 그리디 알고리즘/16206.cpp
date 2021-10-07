@@ -35,7 +35,6 @@ bool cmp(int &a, int &b) {
     if (a % 10 == 0 && b % 10 == 0) return a < b; //둘다 10의 배수 -> 오름차순
     else if (a % 10 == 0) return true; //a만 10의 배수면 true (a가 앞)
     else if (b % 10 == 0) return false; //b만 10의 배수면 false (b가 앞)
-    return a < b; //둘 다 10의배수가 아님 -> 오름차순
 }
 
 int main() {
