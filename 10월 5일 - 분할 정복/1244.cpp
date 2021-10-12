@@ -22,10 +22,8 @@ void changeFemale(int num) {
         size++;
         if (num + size > n || num - size < 1) break; //범위 벗어나면
         if (btn[num + size] != btn[num - size]) break; //같지 않으면
-        else { //같으면 반대로
-            btn[num + size] = !btn[num + size];
-            btn[num - size] = !btn[num - size];
-        }
+        btn[num + size] = !btn[num + size];
+        btn[num - size] = !btn[num - size];
     }
 
 }
