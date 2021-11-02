@@ -1,3 +1,7 @@
+/*
+ * 숨바꼭질 : https://www.acmicpc.net/problem/1697
+ */
+
 #include <iostream>
 #include <algorithm>
 #include <queue>
@@ -39,10 +43,8 @@ int bfs(int n, int k) {
 }
 
 int main() {
-
     int n, k;
     cin >> n >> k;
     cout << bfs(n, k) << "\n";
-
     return 0;
 }
